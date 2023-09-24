@@ -29,7 +29,7 @@
         </draggable>
       </Column>
 
-      <Column title="Progress">
+      <Column title="Processing">
         <draggable 
           v-model="taskStore.progressTasks" 
           group="tasks" 

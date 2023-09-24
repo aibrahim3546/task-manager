@@ -2,7 +2,7 @@
 import getRandomHexColor from '@/utils/generateRandomColors'
 import { defineStore } from 'pinia'
 
-export type TStatus = 'Pending' | 'Progress' | 'Done'
+export type TStatus = 'Pending' | 'Processing' | 'Done'
 
 export interface IFile {
   name: string
@@ -106,7 +106,7 @@ export const useTaskStore = defineStore('task', {
       }
     },
     addTask(task: ITask, status: TStatus) {
-      if (status === 'Progress') {
+      if (status === 'Processing') {
         return this.progressTasks.push(task)
       }
 

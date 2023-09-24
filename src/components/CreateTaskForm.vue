@@ -49,7 +49,7 @@
   
             <v-select
               label="Board"
-              :items="['Pending', 'Progress', 'Done']"
+              :items="['Pending', 'Processing', 'Done']"
               v-model="status"
             ></v-select>
   
