@@ -97,7 +97,7 @@
             size="large"
             color="rgb(100, 149, 237)"
             icon="mdi-close-circle"
-            @click="(e) => onClickRemoveFile(e, index)"
+            @click="(e: Event) => onClickRemoveFile(e, index)"
           ></v-icon>
         </div>
   
