@@ -86,19 +86,41 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
+import { IFile, ITask } from '@/store/task';
+import { computed, watch } from 'vue';
 
-const files = ref<any[]>([]);
+interface FilesProps {
+  task?: ITask
+  onFileChange?: (files: IFile[]) => void
+}
+
+const props = defineProps<FilesProps>();
+const task = computed(() => props.task);
+
+const files = ref<IFile[]>(props.task ? props.task.files : []);
+
+watch(files, (newState) => {
+  if (props.onFileChange) {
+    props.onFileChange(newState);
+  }
+
+  if (task.value) {
+    task.value.files = [...newState];
+  }
+})
 
 const handleFileUpload = (e: Event) => {
   const target = e.target as HTMLInputElement
-  const uploadedFiles: any[] = [];
+  const newFiles: IFile[] = [];
 
   if (target.files) {
     Object.keys(target.files).map((key) => {
       if (target.files) {
         const getFile = target.files[Number(key)];
+        const isFileExist = files.value.find((each) => each.name === getFile.name);
 
-        uploadedFiles.push({
+        if (!isFileExist)
+        newFiles.push({
           type: getFile.type,
           url: URL.createObjectURL(getFile),
           name: getFile.name,
@@ -107,7 +129,7 @@ const handleFileUpload = (e: Event) => {
     });
   }
 
-  files.value = [ ...uploadedFiles ];
+  files.value = [ ...files.value, ...newFiles ];
 }
 
 const onClickFile = (url: string) => {

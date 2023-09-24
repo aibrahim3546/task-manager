@@ -20,10 +20,13 @@
             <v-textarea
               class="mb-5"
               label="Description"
+              hide-details
               v-model="task.description"
             ></v-textarea>
+
+            <Files :task="task" />
   
-            <div>
+            <div class="mt-5">
               <v-divider></v-divider>
   
               <div class="text-subtitle-2 my-5">
@@ -99,6 +102,7 @@
 import { ITask } from '@/store/task';
 import { ref, watch } from 'vue';
 import { computed } from 'vue';
+import Files from './Files.vue';
 
 interface TasEditFormProps {
   task: ITask

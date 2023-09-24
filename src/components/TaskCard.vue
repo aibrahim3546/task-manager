@@ -34,7 +34,7 @@
       <v-card-item>
         <h6 class="text-h6 mb-1">{{ task.title }}</h6>
 
-        <p class="text-subtitle1">{{ task.description }}</p>
+        <p class="text-subtitle1 text-truncate">{{ task.description }}</p>
 
         <div class="d-flex justify-end" v-if="task.label">
           <div
@@ -49,7 +49,7 @@
       </v-card-item>  
     </v-card>
 
-    <TaskEditForm
+    <TaskDialog
       :task="task"
       :is-active="isOpenDialog"
       :set-is-active="setIsOpenDialog"
@@ -59,7 +59,7 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
-import TaskEditForm from './TaskEditForm.vue';
+import TaskDialog from './TaskDialog.vue';
 import { computed } from 'vue';
 import { ITask, useTaskStore } from '@/store/task';
 import { storeToRefs } from 'pinia';

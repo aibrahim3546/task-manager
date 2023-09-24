@@ -3,7 +3,7 @@
 
 <template>
   <v-container class="pa-0">
-    <TaskForm />
+    <CreateTaskForm />
 
     <v-row no-gutters>
       <ProgressBar />
@@ -58,7 +58,7 @@ import { useTaskStore } from '@/store/task';
 
 import Column from '@/components/Column.vue';
 import TaskCard from '@/components/TaskCard.vue';
-import TaskForm from '@/components/TaskForm.vue';
+import CreateTaskForm from '@/components/CreateTaskForm.vue';
 import ProgressBar from '@/components/ProgressBar.vue';
 import SearchBar from '@/components/SearchBar.vue';
 import { ref } from 'vue';

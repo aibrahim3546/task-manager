@@ -54,7 +54,7 @@
             v-model="status"
           ></v-select>
 
-          <Files />
+          <Files :on-file-change="onFileUploadChange" />
         </div>
 
         <v-card-actions class="pa-5">
@@ -76,7 +76,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useTaskStore, TStatus } from '@/store/task';
+import { useTaskStore, TStatus, IFile } from '@/store/task';
 import { ref } from 'vue';
 import Files from '@/components/Files.vue';
 
@@ -87,12 +87,17 @@ const description = ref('');
 const label = ref('');
 const estimatedTime = ref('');
 const status = ref<TStatus>('Pending');
+const attachments = ref<IFile[]>([]);
 
 const resetForm = () => {
   title.value = '';
   description.value = '';
   label.value = '';
   estimatedTime.value = '';
+}
+
+const onFileUploadChange = (uploadedFiles: IFile[]) => {
+  attachments.value = [...uploadedFiles];
 }
 
 const onClickCreate = () => {
@@ -106,7 +111,7 @@ const onClickCreate = () => {
     estimatedTime: estimatedTime.value,
     id: taskStore.uniqueId,
     label: label.value,
-    files: [],
+    files: attachments.value,
     comments: [],
   }, status.value);
 

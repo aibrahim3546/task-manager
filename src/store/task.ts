@@ -4,6 +4,12 @@ import { defineStore } from 'pinia'
 
 export type TStatus = 'Pending' | 'Progress' | 'Done'
 
+export interface IFile {
+  name: string
+  type: string
+  url: string
+}
+
 export interface ITask {
   id: number
   title: string
@@ -11,7 +17,7 @@ export interface ITask {
   label: string
   estimatedTime: string
   comments: string[],
-  files: string[];
+  files: IFile[];
 }
 
 interface TaskStoreState {
