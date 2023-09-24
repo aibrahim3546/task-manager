@@ -86,7 +86,7 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { IFile, ITask } from '@/store/task';
+import { IFile, ITask, useTaskStore } from '@/store/task';
 import { computed, watch } from 'vue';
 
 interface FilesProps {
@@ -96,6 +96,7 @@ interface FilesProps {
 
 const props = defineProps<FilesProps>();
 const task = computed(() => props.task);
+const taskStore = useTaskStore();
 
 const files = ref<IFile[]>(props.task ? props.task.files : []);
 
@@ -105,7 +106,7 @@ watch(files, (newState) => {
   }
 
   if (task.value) {
-    task.value.files = [...newState];
+    taskStore.updateTask({ ...task.value, files: [ ...newState ] })
   }
 })
 

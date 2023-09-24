@@ -78,11 +78,34 @@ export const useTaskStore = defineStore('task', {
     increaseUniqueId() {
       this.uniqueId = this.uniqueId + 1;
     },
+    getTaskByIdAndStatus(id: number) {
+      const allTasks = [...this.pendingTasks, ...this.progressTasks, ...this.doneTasks];
+      return allTasks.find((each) => each.id === id);
+    },
     addNewLabel(name: string) {
       const color = getRandomHexColor(this.getLabelColorKeys);
 
       this.labels[color] = name;
       this.labels[name] = color;
+    },
+    deleteTask(id: number) {
+      let index = this.pendingTasks.findIndex((each) => each.id === id);
+
+      if (index > -1) {
+        return this.pendingTasks.splice(index, 1);
+      }
+
+      index = this.progressTasks.findIndex((each) => each.id === id);
+
+      if (index > -1) {
+        return this.progressTasks.splice(index, 1);
+      }
+
+      index = this.doneTasks.findIndex((each) => each.id === id);
+
+      if (index > -1) {
+        return this.doneTasks.splice(index, 1);
+      }
     },
     addTask(task: ITask, status: TStatus) {
       if (status === 'Progress') {
@@ -95,5 +118,24 @@ export const useTaskStore = defineStore('task', {
 
       return this.pendingTasks.push(task)
     },
+    updateTask(task: ITask) {
+      let index = this.pendingTasks.findIndex((each) => each.id === task.id);
+
+      if (index > -1) {
+        return this.pendingTasks[index] = { ...task };
+      }
+
+      index = this.progressTasks.findIndex((each) => each.id === task.id);
+
+      if (index > -1) {
+        return this.progressTasks[index] = { ...task };
+      }
+
+      index = this.doneTasks.findIndex((each) => each.id === task.id);
+
+      if (index > -1) {
+        return this.doneTasks[index] = { ...task };
+      }
+    } 
   }
 })

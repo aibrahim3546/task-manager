@@ -71,11 +71,11 @@ interface TaskCardProps {
 
 const { labels } = storeToRefs(useTaskStore());
 const props = defineProps<TaskCardProps>();
-const { task } = props;
 
+const task = computed(() => props.task);
 const searchValue = computed(() => props.searchValue);
 const isOpenDialog = ref(false);
-const labelBgColor = labels.value[task.label];
+const labelBgColor = labels.value[task.value.label];
 
 const onClickCard = () => {
   isOpenDialog.value = true;
@@ -87,9 +87,9 @@ const getHiglightClass = () => {
   }
 
   if (
-    task.title.includes(searchValue.value) ||
-    task.description.includes(searchValue.value) ||
-    task.label.includes(searchValue.value)
+    task.value.title.includes(searchValue.value) ||
+    task.value.description.includes(searchValue.value) ||
+    task.value.label.includes(searchValue.value)
   ) {
     return 'active';
   }
