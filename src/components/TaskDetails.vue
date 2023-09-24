@@ -13,11 +13,19 @@
   <div class="pa-1">
     <div class="d-flex aligns-center justify-end mb-10">
       <div>
-        <router-link class="link" :to="{ name: 'Task Details', params: { id: task.id } }">
+        <router-link
+          v-if="isDialog"
+          class="link"
+          :to="{ name: 'Task Details', params: { id: task.id } }"
+        >
           <h6 class="text-h6">
-            DETAILS-{{ task.id }}
+            TASK-{{ task.id }}
           </h6>
         </router-link>
+
+        <h6 v-if="!isDialog" class="text-h6">
+          TASK-{{ task.id }}
+        </h6>
       </div>
 
       <div class="flex-fill"></div>
@@ -62,23 +70,25 @@
 
     <div class="d-flex" style="width: 100%;">
       <div class="flex-fill pr-5">
-        <v-text-field
-          class="mb-5"
-          label="Title"
-          hide-details
-          v-model="taskDetails.title"
-          :variant="isEdit ? undefined : 'plain'"
-          :readonly="!isEdit"
-        ></v-text-field>
-  
-        <v-textarea
-          class="mb-5"
-          label="Description"
-          hide-details
-          v-model="taskDetails.description"
-          :variant="isEdit ? undefined : 'plain'"
-          :readonly="!isEdit"
-        ></v-textarea>
+        <v-form ref="form">
+          <v-text-field
+            class="mb-5"
+            label="Title"
+            v-model="taskDetails.title"
+            :variant="isEdit ? undefined : 'plain'"
+            :readonly="!isEdit"
+            :rules="[(val) => val.trim() ? true : 'Title is required']"
+          ></v-text-field>
+    
+          <v-textarea
+            class="mb-5"
+            label="Description"
+            v-model="taskDetails.description"
+            :variant="isEdit ? undefined : 'plain'"
+            :readonly="!isEdit"
+            :rules="[(val) => val.trim() ? true : 'Description is required']"
+          ></v-textarea>
+        </v-form>
   
         <Files :task="task" />
   
@@ -172,7 +182,7 @@ import { ref } from 'vue';
 import { computed } from 'vue';
 
 import Files from './Files.vue';
-import { RouterLink } from 'vue-router';
+import { RouterLink, useRouter } from 'vue-router';
 
 interface TaskDetailsProps {
   task: ITask;
@@ -181,6 +191,7 @@ interface TaskDetailsProps {
 }
 
 const taskStore = useTaskStore();
+const router = useRouter();
 
 const props = defineProps<TaskDetailsProps>();
 const task = computed(() => props.task);
@@ -188,6 +199,7 @@ const task = computed(() => props.task);
 const newComment = ref('');
 const taskDetails = ref({ ...props.task });
 const isEdit = ref(false);
+const form = ref<any>(null);
 
 const toggleEdit = () => {
   isEdit.value = !isEdit.value;
@@ -198,9 +210,15 @@ const onClickAddComment = () => {
   newComment.value = '';
 }
 
-const onClickSave = () => {
-  taskStore.updateTask(taskDetails.value);
-  toggleEdit();
+const onClickSave = async () => {
+  if (form.value) {
+    const error = await form.value.validate();
+
+    if (error.valid) {
+      taskStore.updateTask(taskDetails.value);
+      toggleEdit();
+    }
+  }
 }
 
 const onClickDelete = () => {
@@ -208,6 +226,8 @@ const onClickDelete = () => {
 
   if (props.closeDialog && props.isDialog) {
     props.closeDialog();
+  } else {
+    router.back();
   }
 }
 </script>

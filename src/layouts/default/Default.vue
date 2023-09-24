@@ -1,12 +1,11 @@
 <template>
   <v-app>
-    <default-bar />
-
-    <default-view />
+    <div class="py-10 px-5">
+      <default-view />
+    </div>
   </v-app>
 </template>
 
 <script lang="ts" setup>
-  import DefaultBar from './AppBar.vue'
   import DefaultView from './View.vue'
 </script>

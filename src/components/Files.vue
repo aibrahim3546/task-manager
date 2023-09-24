@@ -39,7 +39,7 @@
   <div>
     <input
       type="file"
-      ref="file"
+      ref="fileRef"
       style="display: none;"
       @change="handleFileUpload"
       multiple
@@ -50,7 +50,7 @@
     </p>
 
     <div class="file-container ">
-      <div @click="$refs.file.click()" class="file">
+      <div @click="onClickUpload" class="file">
         <v-icon
           size="large"
           color="#cccccc"
@@ -97,6 +97,7 @@ interface FilesProps {
 const props = defineProps<FilesProps>();
 const task = computed(() => props.task);
 const taskStore = useTaskStore();
+const fileRef = ref<any>(null);
 
 const files = ref<IFile[]>(props.task ? props.task.files : []);
 
@@ -131,6 +132,10 @@ const handleFileUpload = (e: Event) => {
   }
 
   files.value = [ ...files.value, ...newFiles ];
+}
+
+const onClickUpload = () => {
+  fileRef.value.click()
 }
 
 const onClickFile = (url: string) => {

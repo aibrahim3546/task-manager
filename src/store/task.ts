@@ -84,8 +84,6 @@ export const useTaskStore = defineStore('task', {
     },
     addNewLabel(name: string) {
       const color = getRandomHexColor(this.getLabelColorKeys);
-
-      this.labels[color] = name;
       this.labels[name] = color;
     },
     deleteTask(id: number) {
