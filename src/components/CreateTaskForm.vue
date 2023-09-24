@@ -106,8 +106,6 @@ const onFileUploadChange = (uploadedFiles: IFile[]) => {
 }
 
 const onClickCreate = async (closeDialog: () => void) => {
-  console.log(estimatedTime.value);
-  
   if (form.value) {
     const error = await form.value.validate();
   

@@ -1,4 +1,14 @@
 <style>
+.image-container {
+  width: 100px;
+  height: 100px;
+  overflow: hidden;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .file {
   width: 100px;
   height: 100px;
@@ -63,11 +73,24 @@
           class="file uploaded-file"
           @click="() => onClickFile(file.url)"
         >
-          <v-icon
-            size="large"
-            color="rgb(100, 149, 237)"
-            icon="mdi-file-document-outline"
-          ></v-icon>
+          <div class="image-container">
+            <img
+              v-if="file.type.includes('image')"
+              :src="file.url"
+              style="object-fit: contain; width: 100px; height: 100px;"
+            />
+          
+            <div v-else>
+              <v-icon
+                size="large"
+                color="rgb(100, 149, 237)"
+                icon="mdi-file-document-outline"
+              ></v-icon>
+              <p class="text-caption text-center">
+                {{ file?.type.split('/')[1] || '' }}
+              </p>
+            </div>
+          </div>
 
           <v-icon
             class="close-icon"
