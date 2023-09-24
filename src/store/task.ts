@@ -1,7 +1,8 @@
 // Utilities
+import getRandomHexColor from '@/utils/generateRandomColors'
 import { defineStore } from 'pinia'
 
-export type TStatus = 'pending' | 'progress' | 'done'
+export type TStatus = 'Pending' | 'Progress' | 'Done'
 
 export interface ITask {
   id: number
@@ -9,15 +10,24 @@ export interface ITask {
   description: string
   label: string
   estimatedTime: string
-  comments: [],
+  comments: string[],
   files: string[];
 }
 
 interface TaskStoreState {
   uniqueId: number
-  pendingTasks: ITask[],
-  progressTasks: ITask[],
-  doneTasks: ITask[],
+  pendingTasks: ITask[]
+  progressTasks: ITask[]
+  doneTasks: ITask[]
+  labels: { [key: string]: string }
+}
+
+export const DEFAULT_LABELS: { [key: string]: string } = {
+  'feature': '#ff6900',
+  'bug': '#eb144c',
+  'task': '#9900ef',
+  'story': '#0693e3',
+  'improvement': '#fcb900',
 }
 
 export const useTaskStore = defineStore('task', {
@@ -26,56 +36,58 @@ export const useTaskStore = defineStore('task', {
     pendingTasks: [],
     progressTasks: [],
     doneTasks: [],
-  }) ,
+    labels: DEFAULT_LABELS,
+  }),
+  getters: {
+    getLabelNames(): string[] {
+      return Object.keys(this.labels).map((key) => {
+        return key;
+      })
+    },
+    getLabelColorKeys(): { [key: string]: string } {
+      const labelColorKeys: { [key: string]: string } = {};
+
+      Object.keys(this.labels).forEach((key) => {
+        const value = this.labels[key];
+
+        return labelColorKeys[value] = key;
+      });
+
+      return labelColorKeys;
+    },
+    taskCompletionRate(): number {
+      const numberOfPendingTask = this.pendingTasks.length;
+      const numberOfProgressTask = this.progressTasks.length;
+      const numberOfDoneTask = this.doneTasks.length;
+      const totalTask = numberOfPendingTask + numberOfProgressTask + numberOfDoneTask;
+
+      if (totalTask === 0) {
+        return totalTask;
+      }
+
+      return Math.round((numberOfDoneTask / totalTask) * 100);
+    }
+  },
   actions: {
     increaseUniqueId() {
       this.uniqueId = this.uniqueId + 1;
     },
+    addNewLabel(name: string) {
+      const color = getRandomHexColor(this.getLabelColorKeys);
+
+      this.labels[color] = name;
+      this.labels[name] = color;
+    },
     addTask(task: ITask, status: TStatus) {
-      if (status === 'progress') {
+      if (status === 'Progress') {
         return this.progressTasks.push(task)
       }
 
-      if (status === 'done') {
+      if (status === 'Done') {
         return this.doneTasks.push(task)
       }
 
       return this.pendingTasks.push(task)
     },
-    updateTasks(tasks: ITask[], status: TStatus) {
-      // console.log('tasks => ', tasks);
-
-      if (status === 'progress') {
-        return this.progressTasks = [...tasks]
-      }
-
-      if (status === 'done') {
-        return this.doneTasks = [...tasks]
-      }
-
-      return this.pendingTasks = [...tasks]
-    },
-    updateTask(index: number, task: ITask, status: TStatus) {
-      if (status === 'progress') {
-        return this.progressTasks[index] = {...task}
-      }
-
-      if (status === 'done') {
-        return this.doneTasks[index] = {...task}
-      }
-
-      return this.pendingTasks[index] = {...task}
-    },
-    deleteTask(index: number, status: TStatus) {
-      if (status === 'progress') {
-        return this.progressTasks.splice(index, 1);
-      }
-
-      if (status === 'done') {
-        return this.doneTasks.splice(index, 1);
-      }
-
-      return this.pendingTasks.splice(index, 1);
-    }
   }
 })

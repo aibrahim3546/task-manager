@@ -33,7 +33,8 @@
 
           <v-combobox
             label="Label"
-            :items="['California', 'Colorado', 'Florida', 'Georgia', 'Texas', 'Wyoming']"
+            item-value="name"
+            :items="taskStore.getLabelNames"
             v-model="label"
           ></v-combobox>
 
@@ -49,7 +50,7 @@
 
           <v-select
             label="Board"
-            :items="['pending', 'progress', 'done']"
+            :items="['Pending', 'Progress', 'Done']"
             v-model="status"
           ></v-select>
 
@@ -85,7 +86,7 @@ const title = ref('');
 const description = ref('');
 const label = ref('');
 const estimatedTime = ref('');
-const status = ref<TStatus>('pending');
+const status = ref<TStatus>('Pending');
 
 const resetForm = () => {
   title.value = '';
@@ -95,6 +96,10 @@ const resetForm = () => {
 }
 
 const onClickCreate = () => {
+  if (!taskStore.labels[label.value] && label.value.trim() !== '') {
+    taskStore.addNewLabel(label.value);
+  }
+
   taskStore.addTask({
     description: description.value,
     title: title.value,
